@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>房間介紹</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    a,
+    button {
+      color: #000;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .roomInfo {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      padding: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 style="font-size: 30px; text-align: center; margin-bottom: 40px;">旅館預約服務</h1>
+  <div class="roomInfo">
+
+  </div>
+
+  <script>
+    let getParameter = new URL(location.href)
+    let roomID = getParameter.searchParams.get('roomID')
+    const url = "https://challenge.thef2e.com/api/thef2e2019/stage6";
+    const token = "kkc1YuXLPcBEPNQl4iMbEfy0GzRcr05lBLl7lF1iVTjH7EDxgqeyvMEU8lYf";
+
+    fetch(url + "/room/" + roomID, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        render(data.room[0]);
+      });
+
+    function render(data) {
+      console.log(data);
+
+      document.querySelector(".roomInfo").innerHTML =
+      `
+      <div>
+        <img src="${data.imageUrl[0]}" alt="" style="width: 200px;">
+        <img src="${data.imageUrl[1]}" alt="" style="width: 200px;">
+        <img src="${data.imageUrl[2]}" alt="" style="width: 200px;">
+      </div>
+      <div>
+        <p>
+          房間名稱：${data.name}
+        </p>
+        <p>
+          平日價格：＄${data.normalDayPrice}
+        </p>
+        <p>
+          假日價格：＄${data.holidayPrice}
+        </p>
+        <p>
+          床型：${data.descriptionShort.Bed[0]}
+        </p>
+        <p>
+          入住時間最早：${data.checkInAndOut.checkInEarly}
+          入住時間最晚：${data.checkInAndOut.checkInLate}
+          退房時間：${data.checkInAndOut.checkOut}
+        </p>
+        <p>
+          詳細說明：${data.description}
+        </p>
+      </div>
+      `
+    }
+
+  </script>
+</body>
+
+</html>
